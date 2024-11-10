@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тренажер таблиці Шульте</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .schulte-table {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 4px;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .cell {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            font-size: 24px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .cell:hover {
+            background-color: #f5f5f5;
+        }
+
+        #timer {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+
+        #controls {
+            margin: 20px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Тренажер таблиці Шульте</h1>
+    <div id="timer">Час: 0.0 с</div>
+    <div class="schulte-table">
+        {% for row in table %}
+            {% for number in row %}
+                <div class="cell" data-number="{{ number }}">{{ number }}</div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    <div id="controls">
+        <button onclick="location.reload()">Нова таблиця</button>
+    </div>
+
+    <script>
+        let startTime;
+        let currentNumber = 1;
+        let timerInterval;
+        const maxNumber = 25;
+
+        function startTimer() {
+            startTime = new Date();
+            timerInterval = setInterval(updateTimer, 100);
+        }
+
+        function updateTimer() {
+            const currentTime = new Date();
+            const elapsedTime = (currentTime - startTime) / 1000;
+            document.getElementById('timer').textContent = `Час: ${elapsedTime.toFixed(1)} с`;
+        }
+
+        document.querySelectorAll('.cell').forEach(cell => {
+            cell.addEventListener('click', () => {
+                const number = parseInt(cell.dataset.number);
+                if (number === currentNumber) {
+                    if (currentNumber === 1) {
+                        startTimer();
+                    }
+                    cell.style.backgroundColor = '#90EE90';
+                    currentNumber++;
+                    
+                    if (currentNumber > maxNumber) {
+                        clearInterval(timerInterval);
+                        alert('Вітаємо! Ви завершили вправу!');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
